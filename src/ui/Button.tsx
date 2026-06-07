@@ -1,6 +1,11 @@
 import styled, { css } from 'styled-components';
 
-const sizes = {
+interface ButtonProps {
+  size?: 'small' | 'medium' | 'large';
+  variation?: 'primary' | 'secondary' | 'danger';
+}
+
+const size = {
   small: css`
     font-size: 1.2rem;
     padding: 0.4rem 0.8rem;
@@ -20,7 +25,7 @@ const sizes = {
   `,
 };
 
-const variations = {
+const variation = {
   primary: css`
     color: var(--color-brand-50);
     background-color: var(--color-brand-600);
@@ -48,18 +53,13 @@ const variations = {
   `,
 };
 
-const Button = styled.button`
+const Button = styled.button<ButtonProps>`
   border: none;
   border-radius: var(--border-radius-sm);
   box-shadow: var(--shadow-sm);
 
-  ${(props) => sizes[props.size]}
-  ${(props) => variations[props.variations]}
+  ${(props) => size[props.size ?? 'medium']}
+  ${(props) => variation[props.variation ?? 'primary']}
 `;
-
-Button.defaultProps = {
-  variations: 'primary',
-  size: 'medium',
-};
 
 export default Button;
