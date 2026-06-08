@@ -1,10 +1,8 @@
-import { deleteCabin } from '../../services/apiCabins';
+import { useDeletCabin } from '../../hooks/useDeleteCabin';
 import type { Cabin as CabinType } from '../../types/cabin';
 import { formatCurrency } from '../../utils/helpers';
 import CreateCabinForm from './CreateCabinForm';
 import { useState } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
 import { HiPencil, HiSquare2Stack, HiTrash } from 'react-icons/hi2';
 import styled from 'styled-components';
 
@@ -48,23 +46,6 @@ const Discount = styled.div`
 `;
 
 function CabinRow({ cabin }: { cabin: CabinType }) {
-  const queryClient = useQueryClient();
-
-  const { isPending: isDeleting, mutate } = useMutation<
-    CabinType, // return type
-    Error, // error type
-    number // passed to mutate()
-  >({
-    mutationFn: (id) => deleteCabin(id),
-    onSuccess: () => {
-      toast.success('Cabin successfully deleted');
-      queryClient.invalidateQueries({
-        queryKey: ['cabins'],
-      });
-    },
-    onError: (err) => toast.error(err.message),
-  });
-
   const [showForm, setShowForm] = useState(false);
   // const { isDeleting, deleteCabin } = useDeleteCabin();
   // const { isCreating, createCabin } = useCreateCabin();
@@ -79,6 +60,8 @@ function CabinRow({ cabin }: { cabin: CabinType }) {
     description,
   } = cabin;
 
+  const { isDeleting, deleteCabinMutation } = useDeletCabin();
+
   return (
     <>
       <TableRow role="row">
@@ -86,10 +69,14 @@ function CabinRow({ cabin }: { cabin: CabinType }) {
         <Cabin>{name}</Cabin>
         <div>Fits up to {maxCapacity} guests</div>
         <Price>{formatCurrency(regularPrice)}</Price>
-        <Discount>{formatCurrency(discount)}</Discount>
+        {discount ? (
+          <Discount>{formatCurrency(discount)}</Discount>
+        ) : (
+          <span>&mdash;</span>
+        )}
         <div>
           <button onClick={() => setShowForm((show) => !show)}>Edit</button>
-          <button disabled={isDeleting} onClick={() => mutate(cabinId)}>
+          <button disabled={isDeleting} onClick={() => deleteCabinMutation(cabinId)}>
             Delete
           </button>
         </div>
