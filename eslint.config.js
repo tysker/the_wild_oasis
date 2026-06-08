@@ -34,7 +34,7 @@ export default [
         navigator: 'readonly',
         console: 'readonly',
         alert: 'readonly',
-        localStorage: 'localStorage',
+        localStorage: 'readonly',
       },
     },
     settings: {

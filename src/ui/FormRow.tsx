@@ -35,10 +35,23 @@ const Error = styled.span`
   font-size: 1.4rem;
   color: var(--color-red-700);
 `;
-export default function FormRow({ label, error, children }) {
+
+type FormRowProps = {
+  label?: string;
+  error?: string;
+  htmlFor?: string;
+  children?: React.ReactNode;
+};
+
+export default function FormRow({
+  label,
+  error,
+  htmlFor,
+  children,
+}: FormRowProps) {
   return (
     <StyledFormRow>
-      {label && <Label htmlFor={children.props.id}>{label}</Label>}
+      {label && <Label htmlFor={htmlFor}>{label}</Label>}
       {children}
       {error && <Error>{error}</Error>}
     </StyledFormRow>

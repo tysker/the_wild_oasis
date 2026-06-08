@@ -48,7 +48,9 @@ const Discount = styled.div`
 `;
 
 function CabinRow({ cabin }: { cabin: CabinType }) {
-  const { isLoading: isDeleting, mutate } = useMutation<
+  const queryClient = useQueryClient();
+
+  const { isPending: isDeleting, mutate } = useMutation<
     CabinType, // return type
     Error, // error type
     number // passed to mutate()
@@ -77,12 +79,10 @@ function CabinRow({ cabin }: { cabin: CabinType }) {
     description,
   } = cabin;
 
-  const queryClient = useQueryClient();
-
   return (
     <>
       <TableRow role="row">
-        <Img src={image} />
+        <Img src={image as string} />
         <Cabin>{name}</Cabin>
         <div>Fits up to {maxCapacity} guests</div>
         <Price>{formatCurrency(regularPrice)}</Price>
