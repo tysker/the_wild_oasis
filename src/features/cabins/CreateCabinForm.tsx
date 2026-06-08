@@ -1,19 +1,13 @@
-import { createEditCabin } from '../../services/apiCabins';
-import type { Cabin as CabinType, NewCabin } from '../../types/cabin';
+import { useCreateCabib } from '../../hooks/useCreateCabin';
+import { useEditCabin } from '../../hooks/useEditCabin';
+import type { Cabin as CabinType } from '../../types/cabin';
 import Button from '../../ui/Button';
 import FileInput from '../../ui/FileInput';
 import Form from '../../ui/Form';
 import FormRow from '../../ui/FormRow';
 import Input from '../../ui/Input';
 import Textarea from '../../ui/Textarea';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type FieldErrors, useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
-
-type EditCabinVariables = {
-  newCabinData: NewCabin;
-  id: number | undefined;
-};
 
 function CreateCabinForm({ cabinToEdit = {} as CabinType }: { cabinToEdit?: CabinType }) {
   const { id: editId, ...editValues } = cabinToEdit;
@@ -21,35 +15,8 @@ function CreateCabinForm({ cabinToEdit = {} as CabinType }: { cabinToEdit?: Cabi
 
   // ======== React Query ================
 
-  const queryClient = useQueryClient();
-
-  const { mutate: createCabin, isPending: isCreating } = useMutation<
-    CabinType,
-    Error,
-    NewCabin
-  >({
-    mutationFn: (newCabin) => createEditCabin(newCabin),
-    onSuccess: () => {
-      toast.success('New cabin successfully created');
-      queryClient.invalidateQueries({ queryKey: ['cabins'] });
-      reset();
-    },
-    onError: (err) => toast.error(err.message),
-  });
-
-  const { mutate: editCabin, isPending: isEditing } = useMutation<
-    CabinType,
-    Error,
-    EditCabinVariables
-  >({
-    mutationFn: ({ newCabinData, id }) => createEditCabin(newCabinData, id),
-    onSuccess: () => {
-      toast.success('Cabin successfully edited');
-      queryClient.invalidateQueries({ queryKey: ['cabins'] });
-      reset();
-    },
-    onError: (err) => toast.error(err.message),
-  });
+  const { isCreating, createCabin } = useCreateCabib();
+  const { isEditing, editCabin } = useEditCabin();
 
   // disable input fields when creating or editing is in process
   const isWorking = isCreating || isEditing;
@@ -70,9 +37,23 @@ function CreateCabinForm({ cabinToEdit = {} as CabinType }: { cabinToEdit?: Cabi
     const image = typeof data.image === 'string' ? data.image : data.image[0];
 
     if (isEditSession) {
-      editCabin({ newCabinData: { ...data, image }, id: editId });
+      editCabin(
+        { newCabinData: { ...data, image }, id: editId },
+        {
+          onSuccess: (data) => {
+            reset();
+          },
+        },
+      );
     } else {
-      createCabin({ ...data, image });
+      createCabin(
+        { ...data, image },
+        {
+          onSuccess: (data) => {
+            reset();
+          },
+        },
+      );
     }
   }
 
