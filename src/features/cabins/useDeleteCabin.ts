@@ -1,5 +1,5 @@
-import { deleteCabin } from '../../../services/apiCabins';
-import type { Cabin } from '../../../types/cabin';
+import { deleteCabin } from '../../services/apiCabins';
+import type { Cabin } from '../../types/cabin';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 
