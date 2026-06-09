@@ -5,21 +5,25 @@ import Form from '../../ui/Form';
 import FormRow from '../../ui/FormRow';
 import Input from '../../ui/Input';
 import Textarea from '../../ui/Textarea';
-import { useCreateCabin } from '../cabins/hooks/useCreateCabin';
-import { useEditCabin } from '../cabins/hooks/useEditCabin';
+import { useCreateCabin } from './useCreateCabin';
+import { useEditCabin } from './useUpdateCabin';
 import { type FieldErrors, useForm } from 'react-hook-form';
 
-function CreateCabinForm({ cabinToEdit = {} as CabinType }: { cabinToEdit?: CabinType }) {
-  const { id: editId, ...editValues } = cabinToEdit;
-  const isEditSession = Boolean(editId);
+function CreateCabinForm({
+  cabinToUpdate = {} as CabinType,
+}: {
+  cabinToUpdate?: CabinType;
+}) {
+  const { id: updateId, ...updateValues } = cabinToUpdate;
+  const isUpdateSession = Boolean(updateId);
 
   // ======== React Query ================
 
   const { isCreating, createCabin } = useCreateCabin();
-  const { isEditing, editCabin } = useEditCabin();
+  const { isUpdating, updateCabin } = useEditCabin();
 
   // disable input fields when creating or editing is in process
-  const isWorking = isCreating || isEditing;
+  const isWorking = isCreating || isUpdating;
 
   // ======== Form Data ========
 
@@ -30,7 +34,7 @@ function CreateCabinForm({ cabinToEdit = {} as CabinType }: { cabinToEdit?: Cabi
     getValues,
     formState: { errors },
   } = useForm<CabinType>({
-    defaultValues: isEditSession ? editValues : {},
+    defaultValues: isUpdateSession ? updateValues : {},
     // will get updated once values returns but i
     // like the solution where you add the data in the reset function a lot better
     // values: isEditSession ? editValues : {},
@@ -39,9 +43,9 @@ function CreateCabinForm({ cabinToEdit = {} as CabinType }: { cabinToEdit?: Cabi
   function onSubmit(data: CabinType) {
     const image = typeof data.image === 'string' ? data.image : data.image[0];
 
-    if (isEditSession) {
-      editCabin(
-        { newCabinData: { ...data, image }, id: editId },
+    if (isUpdateSession) {
+      updateCabin(
+        { newCabinData: { ...data, image }, id: updateId },
         {
           onSuccess: (data) => {
             reset(data);
@@ -152,7 +156,7 @@ function CreateCabinForm({ cabinToEdit = {} as CabinType }: { cabinToEdit?: Cabi
           id="image"
           accept="image/*"
           {...register('image', {
-            required: isEditSession ? false : 'This field is required',
+            required: isUpdateSession ? false : 'This field is required',
           })}
         />
       </FormRow>
@@ -163,7 +167,7 @@ function CreateCabinForm({ cabinToEdit = {} as CabinType }: { cabinToEdit?: Cabi
           Cancel
         </Button>
         <Button disabled={isWorking}>
-          {isEditSession ? 'Edit cabin' : 'Create new cabin'}
+          {isUpdateSession ? 'Edit cabin' : 'Create new cabin'}
         </Button>
       </FormRow>
     </Form>

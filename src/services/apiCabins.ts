@@ -12,7 +12,7 @@ export async function getCabins(): Promise<Cabin[]> {
   return cabins;
 }
 
-export async function createEditCabin(newCabin: NewCabin, id?: number): Promise<Cabin> {
+export async function createUpdateCabin(newCabin: NewCabin, id?: number): Promise<Cabin> {
   const hasImagePath = typeof newCabin.image === 'string';
 
   const imageName =

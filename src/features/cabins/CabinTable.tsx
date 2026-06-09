@@ -1,7 +1,7 @@
 import type { Cabin as CabinType } from '../../types/cabin';
 import Spinner from '../../ui/Spinner';
 import CabinRow from './CabinRow';
-import { useCabins } from './hooks/useCabins';
+import { useCabins } from './useCabins';
 import styled from 'styled-components';
 
 const Table = styled.div`
