@@ -1,5 +1,3 @@
-import { useCreateCabib } from '../../hooks/useCreateCabin';
-import { useEditCabin } from '../../hooks/useEditCabin';
 import type { Cabin as CabinType } from '../../types/cabin';
 import Button from '../../ui/Button';
 import FileInput from '../../ui/FileInput';
@@ -7,6 +5,8 @@ import Form from '../../ui/Form';
 import FormRow from '../../ui/FormRow';
 import Input from '../../ui/Input';
 import Textarea from '../../ui/Textarea';
+import { useCreateCabin } from '../cabins/hooks/useCreateCabin';
+import { useEditCabin } from '../cabins/hooks/useEditCabin';
 import { type FieldErrors, useForm } from 'react-hook-form';
 
 function CreateCabinForm({ cabinToEdit = {} as CabinType }: { cabinToEdit?: CabinType }) {
@@ -15,7 +15,7 @@ function CreateCabinForm({ cabinToEdit = {} as CabinType }: { cabinToEdit?: Cabi
 
   // ======== React Query ================
 
-  const { isCreating, createCabin } = useCreateCabib();
+  const { isCreating, createCabin } = useCreateCabin();
   const { isEditing, editCabin } = useEditCabin();
 
   // disable input fields when creating or editing is in process
@@ -31,6 +31,9 @@ function CreateCabinForm({ cabinToEdit = {} as CabinType }: { cabinToEdit?: Cabi
     formState: { errors },
   } = useForm<CabinType>({
     defaultValues: isEditSession ? editValues : {},
+    // will get updated once values returns but i
+    // like the solution where you add the data in the reset function a lot better
+    // values: isEditSession ? editValues : {},
   });
 
   function onSubmit(data: CabinType) {
@@ -41,13 +44,13 @@ function CreateCabinForm({ cabinToEdit = {} as CabinType }: { cabinToEdit?: Cabi
         { newCabinData: { ...data, image }, id: editId },
         {
           onSuccess: (data) => {
-            reset();
+            reset(data);
           },
         },
       );
     } else {
       createCabin(
-        { ...data, image },
+        { ...data, image: image },
         {
           onSuccess: (data) => {
             reset();
