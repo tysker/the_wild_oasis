@@ -1,9 +1,9 @@
-import { deleteCabin } from '../services/apiCabins';
-import type { Cabin } from '../types/cabin';
+import { deleteCabin } from '../../../services/apiCabins';
+import type { Cabin } from '../../../types/cabin';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 
-export function useDeletCabin() {
+export function useDeleteCabin() {
   const queryClient = useQueryClient();
 
   const { isPending: isDeleting, mutate: deleteCabinMutation } = useMutation<
