@@ -11,8 +11,10 @@ import { type FieldErrors, useForm } from 'react-hook-form';
 
 function CreateCabinForm({
   cabinToUpdate = {} as CabinType,
+  onCloseModal,
 }: {
   cabinToUpdate?: CabinType;
+  onCloseModal: () => void;
 }) {
   const { id: updateId, ...updateValues } = cabinToUpdate;
   const isUpdateSession = Boolean(updateId);
@@ -49,6 +51,7 @@ function CreateCabinForm({
         {
           onSuccess: (data) => {
             reset(data);
+            onCloseModal?.();
           },
         },
       );
@@ -58,6 +61,7 @@ function CreateCabinForm({
         {
           onSuccess: (data) => {
             reset();
+            onCloseModal?.();
           },
         },
       );
@@ -71,7 +75,7 @@ function CreateCabinForm({
   // ============= Form  =================
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit, onError)}>
+    <Form onSubmit={handleSubmit(onSubmit, onError)} type={onCloseModal ? 'modal' : 'regular'}>
       <FormRow label="Cabin name" htmlFor="name" error={errors?.name?.message}>
         <Input
           type="text"
@@ -163,7 +167,7 @@ function CreateCabinForm({
 
       <FormRow>
         {/* type is an HTML attribute! */}
-        <Button variation="secondary" type="reset">
+        <Button variation="secondary" type="reset" onClick={() => onCloseModal?.()}>
           Cancel
         </Button>
         <Button disabled={isWorking}>
