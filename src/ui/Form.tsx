@@ -1,12 +1,12 @@
 import styled, { css } from 'styled-components';
 
 interface FormProps {
-  type?: 'modal';
+  type?: 'modal' | 'regular';
 }
 
 const Form = styled.form<FormProps>`
   ${(props) =>
-    props.type !== 'modal' &&
+    (props.type ?? 'regular') === 'regular' &&
     css`
       padding: 2.4rem 4rem;
 
@@ -17,7 +17,7 @@ const Form = styled.form<FormProps>`
     `}
 
   ${(props) =>
-    props.type === 'modal' &&
+    (props.type ?? 'regular') === 'modal' &&
     css`
       width: 80rem;
     `}
