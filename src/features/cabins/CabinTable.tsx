@@ -1,4 +1,3 @@
-import type { Cabin as CabinType } from '../../types/cabin';
 import Spinner from '../../ui/Spinner';
 import Table from '../../ui/Table';
 import CabinRow from './CabinRow';
