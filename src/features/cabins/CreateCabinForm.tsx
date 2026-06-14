@@ -9,13 +9,12 @@ import { useCreateCabin } from './useCreateCabin';
 import { useEditCabin } from './useUpdateCabin';
 import { type FieldErrors, useForm } from 'react-hook-form';
 
-function CreateCabinForm({
-  cabinToUpdate = {} as CabinType,
-  onCloseModal,
-}: {
+type CreateCabinFormPops = {
   cabinToUpdate?: CabinType;
-  onCloseModal: () => void;
-}) {
+  onCloseModal?: () => void;
+};
+
+function CreateCabinForm({ cabinToUpdate = {} as CabinType, onCloseModal }: CreateCabinFormPops) {
   const { id: updateId, ...updateValues } = cabinToUpdate;
   const isUpdateSession = Boolean(updateId);
 
@@ -87,11 +86,7 @@ function CreateCabinForm({
         />
       </FormRow>
 
-      <FormRow
-        label="Maximum capacity"
-        htmlFor="maxCapacity"
-        error={errors?.maxCapacity?.message}
-      >
+      <FormRow label="Maximum capacity" htmlFor="maxCapacity" error={errors?.maxCapacity?.message}>
         <Input
           type="number"
           id="maxCapacity"
@@ -106,11 +101,7 @@ function CreateCabinForm({
         />
       </FormRow>
 
-      <FormRow
-        label="Regular price"
-        htmlFor="regularPrice"
-        error={errors?.regularPrice?.message}
-      >
+      <FormRow label="Regular price" htmlFor="regularPrice" error={errors?.regularPrice?.message}>
         <Input
           type="number"
           id="regularPrice"
@@ -134,17 +125,12 @@ function CreateCabinForm({
           {...register('discount', {
             required: 'This field is required',
             validate: (value) =>
-              Number(value) <= Number(getValues().regularPrice) ||
-              'Discount should be less than regular price',
+              Number(value) <= Number(getValues().regularPrice) || 'Discount should be less than regular price',
           })}
         />
       </FormRow>
 
-      <FormRow
-        label="Description for website"
-        htmlFor="description"
-        error={errors?.description?.message}
-      >
+      <FormRow label="Description for website" htmlFor="description" error={errors?.description?.message}>
         <Textarea
           id="description"
           defaultValue=""
@@ -170,9 +156,7 @@ function CreateCabinForm({
         <Button variation="secondary" type="reset" onClick={() => onCloseModal?.()}>
           Cancel
         </Button>
-        <Button disabled={isWorking}>
-          {isUpdateSession ? 'Edit cabin' : 'Create new cabin'}
-        </Button>
+        <Button disabled={isWorking}>{isUpdateSession ? 'Edit cabin' : 'Create new cabin'}</Button>
       </FormRow>
     </Form>
   );
