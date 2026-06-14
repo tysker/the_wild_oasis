@@ -80,7 +80,7 @@ const ModalContext = createContext<ModalContextProps | undefined>(undefined);
 // Custom hook that safely accesses the modal context.
 // Any component that calls useModal() must be inside a <Modal> —
 // the error throw protects against using it outside.
-function useModal() {
+function useModalContext() {
   const context = useContext(ModalContext);
 
   // If context is undefined, the component is used outside <Modal.Provider>
@@ -118,7 +118,7 @@ function Modal({ children }: { children: ReactNode }) {
 
 function Open({ children, opens: opensWindowName }: OpenProps) {
   // Get the open function from context
-  const { open } = useModal();
+  const { open } = useModalContext();
 
   // cloneElement copies the child element (e.g. a Button) and injects
   // a new onClick prop into it — without modifying the original component.
@@ -136,7 +136,7 @@ function Open({ children, opens: opensWindowName }: OpenProps) {
 
 function Window({ children, name }: WindowProps) {
   // Get openName (which window should be open) and close from context
-  const { openName, close } = useModal();
+  const { openName, close } = useModalContext();
 
   // Attach a ref to the modal div so clicks outside it can be detected.
   // useOutsideMouseClick calls close() when a click outside ref.current is detected.
