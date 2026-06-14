@@ -1,4 +1,5 @@
-import { createContext, type ReactNode, useContext } from 'react';
+import type { Cabin } from '../types/cabin';
+import { createContext, type ReactElement, type ReactNode, useContext } from 'react';
 import styled from 'styled-components';
 
 const StyledTable = styled.div`
@@ -106,7 +107,10 @@ function Row({ children }: { children: ReactNode }) {
   );
 }
 
-function Body({ children }: { children: ReactNode }) {}
+function Body<T>({ data, render }: { data: T[]; render: (el: T) => ReactNode }) {
+  if (!data.length) return <Empty>No data to show at the moment</Empty>;
+  return <StyledBody>{data.map(render)}</StyledBody>;
+}
 
 Table.Header = Header;
 Table.Row = Row;
