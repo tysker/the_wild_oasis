@@ -1,4 +1,6 @@
-import styled from "styled-components";
+import type { Cabin } from '../types/cabin';
+import { createContext, type ReactElement, type ReactNode, useContext } from 'react';
+import styled from 'styled-components';
 
 const StyledTable = styled.div`
   border: 1px solid var(--color-grey-200);
@@ -9,7 +11,7 @@ const StyledTable = styled.div`
   overflow: hidden;
 `;
 
-const CommonRow = styled.div`
+const CommonRow = styled.div<{ columns: string }>`
   display: grid;
   grid-template-columns: ${(props) => props.columns};
   column-gap: 2.4rem;
@@ -58,3 +60,61 @@ const Empty = styled.p`
   text-align: center;
   margin: 2.4rem;
 `;
+
+type TableContextProps = {
+  columns: string;
+};
+
+const TableContext = createContext<TableContextProps | undefined>(undefined);
+
+function useTableContext() {
+  const context = useContext(TableContext);
+
+  if (!context) {
+    throw new Error('useTableContext must be inside a Table');
+  }
+
+  return context;
+}
+
+function Table({ columns, children }: { columns: string; children: ReactNode }) {
+  return (
+    <TableContext.Provider
+      value={{
+        columns,
+      }}
+    >
+      <StyledTable role="table">{children}</StyledTable>
+    </TableContext.Provider>
+  );
+}
+
+function Header({ children }: { children: ReactNode }) {
+  const { columns } = useTableContext();
+  return (
+    <StyledHeader role="row" as="header" columns={columns}>
+      {children}
+    </StyledHeader>
+  );
+}
+
+function Row({ children }: { children: ReactNode }) {
+  const { columns } = useTableContext();
+  return (
+    <StyledRow role="row" columns={columns}>
+      {children}
+    </StyledRow>
+  );
+}
+
+function Body<T>({ data, render }: { data: T[]; render: (el: T) => ReactNode }) {
+  if (!data.length) return <Empty>No data to show at the moment</Empty>;
+  return <StyledBody>{data.map(render)}</StyledBody>;
+}
+
+Table.Header = Header;
+Table.Row = Row;
+Table.Body = Body;
+Table.Footer = Footer;
+
+export default Table;
