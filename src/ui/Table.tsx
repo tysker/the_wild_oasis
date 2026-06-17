@@ -1,5 +1,4 @@
-import type { Cabin } from '../types/cabin';
-import { createContext, type ReactElement, type ReactNode, useContext } from 'react';
+import { createContext, type ReactNode, useContext } from 'react';
 import styled from 'styled-components';
 
 const StyledTable = styled.div`
@@ -8,7 +7,6 @@ const StyledTable = styled.div`
   font-size: 1.4rem;
   background-color: var(--color-grey-0);
   border-radius: 7px;
-  overflow: hidden;
 `;
 
 const CommonRow = styled.div<{ columns: string }>`

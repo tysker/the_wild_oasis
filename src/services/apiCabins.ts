@@ -45,9 +45,7 @@ export async function createUpdateCabin(newCabin: NewCabin, id?: number): Promis
   }
 
   if (!hasImagePath) {
-    const { error: storageError } = await supabase.storage
-      .from('cabin-images')
-      .upload(imageName, newCabin.image);
+    const { error: storageError } = await supabase.storage.from('cabin-images').upload(imageName, newCabin.image);
 
     if (storageError) {
       await supabase.from('cabins').delete().eq('id', data.id);
@@ -59,7 +57,7 @@ export async function createUpdateCabin(newCabin: NewCabin, id?: number): Promis
   return data;
 }
 
-export async function deleteCabin(cabinId: number): Promise<Cabin> {
+export async function deleteCabin(cabinId: string): Promise<Cabin> {
   const { data: cabin, error } = await supabase.from('cabins').delete().eq('id', cabinId);
 
   if (error) {

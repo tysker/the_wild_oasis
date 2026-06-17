@@ -1,6 +1,6 @@
 // The shape stored in the database
 export interface Cabin {
-  id?: number;
+  id?: string;
   created_at?: string;
   name: string;
   maxCapacity: number;
