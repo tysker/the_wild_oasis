@@ -9,7 +9,7 @@ export function useDeleteCabin() {
   const { isPending: isDeleting, mutate: deleteCabinMutation } = useMutation<
     Cabin, // return type
     Error, // error type
-    number // passed to mutate()
+    string // passed to mutate()
   >({
     mutationFn: (id) => deleteCabin(id),
     onSuccess: () => {
