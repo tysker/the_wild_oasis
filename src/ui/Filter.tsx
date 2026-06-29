@@ -1,3 +1,4 @@
+import type { Options } from '../types/types';
 import { useSearchParams } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 
@@ -39,10 +40,7 @@ const FilterButton = styled.button<{ $active: boolean }>`
 
 type FilterProps = {
   filterField: string;
-  options: {
-    value: string;
-    label: string;
-  }[];
+  options: Options[];
 };
 
 export default function Filter({ filterField, options }: FilterProps) {
@@ -61,6 +59,7 @@ export default function Filter({ filterField, options }: FilterProps) {
           key={option.value}
           onClick={() => handleClick(option.value)}
           $active={option.value === currentFilter}
+          disabled={option.value === currentFilter}
         >
           {option.label}
         </FilterButton>
