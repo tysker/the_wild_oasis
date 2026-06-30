@@ -5,17 +5,13 @@ import toast from 'react-hot-toast';
 
 type EditCabinVariables = {
   newCabinData: NewCabin;
-  id: number | undefined;
+  id: string | undefined;
 };
 
 export function useEditCabin() {
   const queryClient = useQueryClient();
 
-  const { mutate: updateCabin, isPending: isUpdating } = useMutation<
-    Cabin,
-    Error,
-    EditCabinVariables
-  >({
+  const { mutate: updateCabin, isPending: isUpdating } = useMutation<Cabin, Error, EditCabinVariables>({
     mutationFn: ({ newCabinData, id }) => createUpdateCabin(newCabinData, id),
     onSuccess: () => {
       toast.success('Cabin successfully updated');

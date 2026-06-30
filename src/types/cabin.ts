@@ -13,5 +13,5 @@ export interface Cabin {
 // What you send to the mutation — image is a File object
 export type NewCabin = Omit<Cabin, 'id' | 'created_at' | 'image'> & {
   image: string | FileList | File;
-  id?: number;
+  id?: string;
 };
