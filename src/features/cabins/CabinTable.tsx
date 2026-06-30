@@ -1,4 +1,5 @@
 import type { Cabin } from '../../types/cabin';
+import Empty from '../../ui/Empty';
 import Menus from '../../ui/Menus';
 import Spinner from '../../ui/Spinner';
 import Table from '../../ui/Table';
@@ -11,6 +12,8 @@ export const CabinTable = () => {
   const [searchParams] = useSearchParams();
 
   if (isLoading) return <Spinner />;
+
+  if (!cabins.length) return <Empty resource="cabins" />;
 
   const filterValue = searchParams.get('discount') || 'all';
   const FILTERS: Record<string, (cabin: Cabin) => boolean> = {
