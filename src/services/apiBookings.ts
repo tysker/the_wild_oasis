@@ -2,10 +2,20 @@ import type { Booking } from '../types/booking';
 import { getToday } from '../utils/helpers';
 import supabase from './supabase';
 
-export async function getBookings() {
-  const { data, error } = await supabase
+export async function getBookings({ filter, sortBy }): Promise<Booking[]> {
+  let query = supabase
     .from('bookings')
-    .select('*, cabins(name), guests(fullName, email)');
+    .select(
+      'id, created_at, startDate, endDate, numNights, numGuests, status, totalPrice, cabins(name), guests(fullName, email)',
+    );
+
+  // Filter
+  if (filter) query = query[filter.method || 'eq'](filter.field, filter.value);
+
+  // Sort
+  if (sortBy) query = query.order(sortBy.field, { ascending: sortBy.direction === 'desc' });
+
+  const { data, error } = await query;
 
   if (error) {
     console.error(error);
