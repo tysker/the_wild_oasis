@@ -1,3 +1,4 @@
+import type { BookingListItem } from '../../types/booking';
 import Table from '../../ui/Table';
 import Tag from '../../ui/Tag';
 import { formatCurrency, formatDistanceFromNow } from '../../utils/helpers';
@@ -44,6 +45,8 @@ function BookingRow({
     guests: { fullName: guestName, email },
     cabins: { name: cabinName },
   },
+}: {
+  booking: BookingListItem;
 }) {
   const statusToTagName = {
     unconfirmed: 'blue',
@@ -62,10 +65,8 @@ function BookingRow({
 
       <Stacked>
         <span>
-          {isToday(new Date(startDate))
-            ? 'Today'
-            : formatDistanceFromNow(startDate)}{' '}
-          &rarr; {numNights} night stay
+          {isToday(new Date(startDate)) ? 'Today' : formatDistanceFromNow(startDate)} &rarr;{' '}
+          {numNights} night stay
         </span>
         <span>
           {format(new Date(startDate), 'MMM dd yyyy')} &mdash;{' '}

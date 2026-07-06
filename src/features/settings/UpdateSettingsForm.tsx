@@ -10,12 +10,7 @@ import type React from 'react';
 function UpdateSettingsForm() {
   const {
     isLoading,
-    settings: {
-      minBookingLength,
-      maxBookingLength,
-      maxGuestsPerBooking,
-      breakfastPrice,
-    } = {},
+    settings: { minBookingLength, maxBookingLength, maxGuestsPerBooking, breakfastPrice } = {},
   } = useSettings();
 
   const { isUpdating, updateSetting } = useUpdateSetting();

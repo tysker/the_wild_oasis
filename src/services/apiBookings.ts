@@ -1,12 +1,18 @@
-import type { Booking } from '../types/booking';
+import type { Booking, BookingListItem } from '../types/booking';
+import { PAGE_SIZE } from '../utils/constants';
 import { getToday } from '../utils/helpers';
 import supabase from './supabase';
 
-export async function getBookings({ filter, sortBy }): Promise<Booking[]> {
+export async function getBookings({
+  filter,
+  sortBy,
+  page,
+}): Promise<{ data: BookingListItem[]; count: number }> {
   let query = supabase
     .from('bookings')
     .select(
       'id, created_at, startDate, endDate, numNights, numGuests, status, totalPrice, cabins(name), guests(fullName, email)',
+      { count: 'exact' },
     );
 
   // Filter
@@ -15,14 +21,20 @@ export async function getBookings({ filter, sortBy }): Promise<Booking[]> {
   // Sort
   if (sortBy) query = query.order(sortBy.field, { ascending: sortBy.direction === 'desc' });
 
-  const { data, error } = await query;
+  if (page) {
+    const from = (page - 1) * (PAGE_SIZE - 1);
+    const to = from + PAGE_SIZE - 1;
+    query = query.range(from, to);
+  }
+
+  const { data, count, error } = await query;
 
   if (error) {
     console.error(error);
     throw new Error('Booking could not be loaded');
   }
 
-  return data;
+  return { data, count: count ?? 0 };
 }
 
 export async function getBooking(id: number): Promise<Booking> {

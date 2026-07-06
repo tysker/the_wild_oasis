@@ -2,6 +2,7 @@ import { useSearchParams } from 'react-router-dom';
 import { HiChevronRight } from 'react-icons/hi';
 import { HiChevronLeft } from 'react-icons/hi2';
 import styled from 'styled-components';
+import { PAGE_SIZE } from '../utils/constants.ts';
 
 const StyledPagination = styled.div`
   width: 100%;
@@ -24,7 +25,7 @@ const Buttons = styled.div`
   gap: 0.6rem;
 `;
 
-const PaginationButton = styled.button<{ $active: boolean }>`
+const PaginationButton = styled.button<{ $active?: boolean }>`
   background-color: ${(props) =>
     props.$active ? ' var(--color-brand-600)' : 'var(--color-grey-50)'};
   color: ${(props) => (props.$active ? ' var(--color-brand-50)' : 'inherit')};
@@ -59,8 +60,6 @@ const PaginationButton = styled.button<{ $active: boolean }>`
   }
 `;
 
-const PAGE_SIZE = 10;
-
 function Pagination({ count }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = !searchParams.get('page') ? 1 : Number(searchParams.get('page'));
@@ -68,7 +67,6 @@ function Pagination({ count }) {
 
   function nextPage() {
     const next = currentPage === pageCount ? currentPage : currentPage + 1;
-    console.log(next);
 
     searchParams.set('page', next.toString());
     setSearchParams(searchParams);
@@ -76,8 +74,6 @@ function Pagination({ count }) {
 
   function prevPage() {
     const prev = currentPage === 1 ? currentPage : currentPage - 1;
-
-    console.log(prev);
 
     searchParams.set('page', prev.toString());
     setSearchParams(searchParams);
@@ -93,11 +89,19 @@ function Pagination({ count }) {
         <span>{count}</span> results
       </P>
       <Buttons>
-        <PaginationButton onClick={prevPage} disabled={currentPage === 1} $active={true}>
+        <PaginationButton
+          onClick={prevPage}
+          disabled={currentPage === 1}
+          $active={currentPage === pageCount}
+        >
           <HiChevronLeft /> <span>Previous</span>
         </PaginationButton>
 
-        <PaginationButton onClick={nextPage} disabled={currentPage === pageCount} $active={true}>
+        <PaginationButton
+          onClick={nextPage}
+          disabled={currentPage === pageCount}
+          $active={currentPage === 1}
+        >
           <span>Next</span> <HiChevronRight />
         </PaginationButton>
       </Buttons>

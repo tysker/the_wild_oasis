@@ -23,6 +23,19 @@ export interface Booking {
 
 // When you fetch a booking with its relations joined:
 export interface BookingWithDetails extends Booking {
-  cabin: Cabin;
-  guest: Guest;
+  cabins: Cabin;
+  guests: Guest;
+}
+
+export interface BookingListItem {
+  id: number;
+  created_at: string;
+  startDate: string;
+  endDate: string;
+  numNights: number;
+  numGuests: number;
+  status: BookingStatus;
+  totalPrice: number;
+  cabins: { name: string }[];
+  guests: { fullName: string; email: string }[];
 }
