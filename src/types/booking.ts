@@ -36,6 +36,6 @@ export interface BookingListItem {
   numGuests: number;
   status: BookingStatus;
   totalPrice: number;
-  cabins: { name: string }[];
-  guests: { fullName: string; email: string }[];
+  cabins: { name: string };
+  guests: { fullName: string; email: string };
 }

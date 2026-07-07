@@ -34,7 +34,7 @@ export async function getBookings({
     throw new Error('Booking could not be loaded');
   }
 
-  return { data, count: count ?? 0 };
+  return { data: data as unknown as BookingListItem[], count: count ?? 0 };
 }
 
 export async function getBooking(id: number): Promise<Booking> {
