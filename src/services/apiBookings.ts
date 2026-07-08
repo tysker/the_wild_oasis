@@ -37,7 +37,7 @@ export async function getBookings({
   return { data: data as unknown as BookingListItem[], count: count ?? 0 };
 }
 
-export async function getBooking(id: number): Promise<Booking> {
+export async function getBooking(id: number): Promise<BookingListItem> {
   const { data, error } = await supabase
     .from('bookings')
     .select('*, cabins(*), guests(*)')
@@ -106,11 +106,14 @@ export async function getStaysTodayActivity(): Promise<Booking[]> {
   return data;
 }
 
-export async function updateBooking(id: number, obj): Promise<Booking> {
+export async function updateBooking(
+  bookinId: number,
+  obj: { status: string; isPaid: boolean },
+): Promise<Booking> {
   const { data, error } = await supabase
     .from('bookings')
     .update(obj)
-    .eq('id', id)
+    .eq('id', bookinId)
     .select()
     .single();
 

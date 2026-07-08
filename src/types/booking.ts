@@ -34,6 +34,8 @@ export interface BookingListItem {
   endDate: string;
   numNights: number;
   numGuests: number;
+  hasBreakfast?: boolean;
+  isPaid?: boolean;
   status: BookingStatus;
   totalPrice: number;
   cabins: { name: string };
