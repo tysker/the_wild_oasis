@@ -1,4 +1,5 @@
 import { useOutsideMouseClick } from '../hooks/useOutsideMouseClick';
+import type { Booking } from '../types/booking';
 import { createContext, useContext, useState } from 'react';
 import type { MouseEvent, ReactElement, ReactNode, RefObject } from 'react';
 import { HiEllipsisVertical } from 'react-icons/hi2';
