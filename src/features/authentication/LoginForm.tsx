@@ -10,13 +10,21 @@ function LoginForm() {
   const [email, setEmail] = useState('joergoertel@proton.me');
   const [password, setPassword] = useState('3wcZ2JsGV&m9#@XsSnSaM5%vTT6');
 
-  const { login, isLoading } = useLogin();
+  const { login, isLoading: isPending } = useLogin();
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     if (!email || !password) return;
-    login({ email, password });
+    login(
+      { email, password },
+      {
+        onSettled: () => {
+          setEmail('');
+          setPassword('');
+        },
+      },
+    );
   }
 
   return (
@@ -29,7 +37,7 @@ function LoginForm() {
           autoComplete="username"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          disabled={isLoading}
+          disabled={isPending}
         />
       </FormRowVertical>
       <FormRowVertical label="Password">
@@ -39,11 +47,11 @@ function LoginForm() {
           autoComplete="current-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          disabled={isLoading}
+          disabled={isPending}
         />
       </FormRowVertical>
       <FormRowVertical>
-        <Button size="large">{!isLoading ? 'Login' : <SpinnerMini />}</Button>
+        <Button size="large">{!isPending ? 'Login' : <SpinnerMini />}</Button>
       </FormRowVertical>
     </Form>
   );
