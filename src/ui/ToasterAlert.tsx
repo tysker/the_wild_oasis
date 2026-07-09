@@ -8,7 +8,7 @@ export default function ToasterAlert() {
       containerStyle={{ margin: '8px' }}
       toastOptions={{
         success: {
-          duration: 3000,
+          duration: 5000,
         },
         error: {
           duration: 5000,
