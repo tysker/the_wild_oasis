@@ -1,4 +1,5 @@
 import { useOutsideMouseClick } from '../hooks/useOutsideMouseClick';
+import type { Booking } from '../types/booking';
 import { createContext, useContext, useState } from 'react';
 import type { MouseEvent, ReactElement, ReactNode, RefObject } from 'react';
 import { HiEllipsisVertical } from 'react-icons/hi2';
@@ -18,7 +19,6 @@ type MenuContextProps = {
 };
 
 const Menu = styled.div`
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -33,7 +33,7 @@ const StyledToggle = styled.button`
   transition: all 0.2s;
 
   &:hover {
-    background-color: var(--color-grey-100);
+    background-color: var(--color-grey-200);
   }
 
   & svg {
@@ -44,8 +44,7 @@ const StyledToggle = styled.button`
 `;
 
 const StyledList = styled.ul<{ position: Position; ref: RefObject<HTMLDivElement> }>`
-  position: absolute;
-  z-index: 1;
+  position: fixed;
 
   background-color: var(--color-grey-0);
   box-shadow: var(--shadow-md);
@@ -69,7 +68,7 @@ const StyledButton = styled.button`
   gap: 1.6rem;
 
   &:hover {
-    background-color: var(--color-grey-50);
+    background-color: var(--color-grey-200);
   }
 
   & svg {
@@ -98,7 +97,11 @@ function Menus({ children }: { children: ReactNode }) {
   const close = () => setOpenId('');
   const open = setOpenId;
 
-  return <MenuContext.Provider value={{ openId, close, open, position, setPosition }}>{children}</MenuContext.Provider>;
+  return (
+    <MenuContext.Provider value={{ openId, close, open, position, setPosition }}>
+      {children}
+    </MenuContext.Provider>
+  );
 }
 
 function Toggle({ id }: { id: string }) {
@@ -107,8 +110,8 @@ function Toggle({ id }: { id: string }) {
   function handleClick(e: MouseEvent<HTMLButtonElement>) {
     const rect = (e.target as HTMLElement).closest('button')?.getBoundingClientRect();
     const position = {
-      x: -8,
-      y: rect.height,
+      x: window.innerWidth - rect.width - rect.x,
+      y: rect.y + rect.height + 8,
     };
 
     setPosition(position);
@@ -140,7 +143,15 @@ function List({ id, children }: { id: string; children: ReactNode }) {
   );
 }
 
-function Button({ children, icon, onClick }: { children: ReactNode; icon: ReactElement; onClick?: () => void }) {
+function Button({
+  children,
+  icon,
+  onClick,
+}: {
+  children: ReactNode;
+  icon: ReactElement;
+  onClick?: () => void;
+}) {
   const { close } = useMenuContext();
 
   function handleClick() {

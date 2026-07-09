@@ -1,21 +1,43 @@
-import type { Booking } from '../types/booking';
+import type { Booking, BookingListItem } from '../types/booking';
+import { PAGE_SIZE } from '../utils/constants';
 import { getToday } from '../utils/helpers';
 import supabase from './supabase';
 
-export async function getBookings() {
-  const { data, error } = await supabase
+export async function getBookings({
+  filter,
+  sortBy,
+  page,
+}): Promise<{ data: BookingListItem[]; count: number }> {
+  let query = supabase
     .from('bookings')
-    .select('*, cabins(name), guests(fullName, email)');
+    .select(
+      'id, created_at, startDate, endDate, numNights, numGuests, status, totalPrice, cabins(name), guests(fullName, email)',
+      { count: 'exact' },
+    );
+
+  // Filter
+  if (filter) query = query[filter.method || 'eq'](filter.field, filter.value);
+
+  // Sort
+  if (sortBy) query = query.order(sortBy.field, { ascending: sortBy.direction === 'desc' });
+
+  if (page) {
+    const from = (page - 1) * (PAGE_SIZE - 1);
+    const to = from + PAGE_SIZE - 1;
+    query = query.range(from, to);
+  }
+
+  const { data, count, error } = await query;
 
   if (error) {
     console.error(error);
     throw new Error('Booking could not be loaded');
   }
 
-  return data;
+  return { data: data as unknown as BookingListItem[], count: count ?? 0 };
 }
 
-export async function getBooking(id: number): Promise<Booking> {
+export async function getBooking(id: number): Promise<BookingListItem> {
   const { data, error } = await supabase
     .from('bookings')
     .select('*, cabins(*), guests(*)')
@@ -84,11 +106,14 @@ export async function getStaysTodayActivity(): Promise<Booking[]> {
   return data;
 }
 
-export async function updateBooking(id: number, obj): Promise<Booking> {
+export async function updateBooking(
+  bookinId: number,
+  obj: { status: string; isPaid?: boolean },
+): Promise<Booking> {
   const { data, error } = await supabase
     .from('bookings')
     .update(obj)
-    .eq('id', id)
+    .eq('id', bookinId)
     .select()
     .single();
 
