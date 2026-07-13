@@ -10,9 +10,9 @@ function LoginForm() {
   const [email, setEmail] = useState('joergoertel@proton.me');
   const [password, setPassword] = useState('3wcZ2JsGV&m9#@XsSnSaM5%vTT6');
 
-  const { login, isLoading: isPending } = useLogin();
+  const { login, isPending } = useLogin();
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
 
     if (!email || !password) return;
