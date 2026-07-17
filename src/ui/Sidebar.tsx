@@ -1,4 +1,3 @@
-import Uploader from '../data/Uploader';
 import Logo from './Logo';
 import MainNav from './MainNav';
 import styled from 'styled-components';
@@ -20,7 +19,7 @@ export default function Sidebar() {
       <Logo />
       <MainNav />
 
-      <Uploader />
+      {/* <Uploader /> */}
     </StyledSidebar>
   );
 }
