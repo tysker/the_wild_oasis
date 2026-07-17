@@ -43,7 +43,10 @@ const StyledToggle = styled.button`
   }
 `;
 
-const StyledList = styled.ul<{ position: Position; ref: RefObject<HTMLDivElement> }>`
+const StyledList = styled.ul<{
+  position: Position;
+  ref: RefObject<HTMLDivElement>;
+}>`
   position: fixed;
 
   background-color: var(--color-grey-0);
@@ -98,7 +101,9 @@ function Menus({ children }: { children: ReactNode }) {
   const open = setOpenId;
 
   return (
-    <MenuContext.Provider value={{ openId, close, open, position, setPosition }}>
+    <MenuContext.Provider
+      value={{ openId, close, open, position, setPosition }}
+    >
       {children}
     </MenuContext.Provider>
   );
@@ -108,7 +113,11 @@ function Toggle({ id }: { id: string }) {
   const { openId, close, open, setPosition } = useMenuContext();
 
   function handleClick(e: MouseEvent<HTMLButtonElement>) {
-    const rect = (e.target as HTMLElement).closest('button')?.getBoundingClientRect();
+    e.stopPropagation();
+
+    const rect = (e.target as HTMLElement)
+      .closest('button')
+      ?.getBoundingClientRect();
     const position = {
       x: window.innerWidth - rect.width - rect.x,
       y: rect.y + rect.height + 8,
@@ -132,7 +141,7 @@ function Toggle({ id }: { id: string }) {
 
 function List({ id, children }: { id: string; children: ReactNode }) {
   const { openId, position, close } = useMenuContext();
-  const ref = useOutsideMouseClick(close);
+  const ref = useOutsideMouseClick(close, false);
 
   if (openId !== id || !position) return null;
 
