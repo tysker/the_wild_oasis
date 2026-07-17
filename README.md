@@ -55,3 +55,4 @@
 | **Utilities**                           |                                                                |
 | `date-fns`                              | Modular utility functions for date manipulation                |
 | `recharts`                              | Recharts is a Redefined chart library built with React and D3. |
+| `react-error-boundary`                  | Reusable React error boundry component library.                |
